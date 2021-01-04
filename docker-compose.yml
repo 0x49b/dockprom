@@ -11,7 +11,7 @@ volumes:
 services:
 
   prometheus:
-    image: prom/prometheus:v2.23.0
+    image: prom/prometheus:latest
     container_name: prometheus
     volumes:
       - ./prometheus:/etc/prometheus
@@ -29,10 +29,24 @@ services:
     networks:
       - monitor-net
     labels:
-      org.label-schema.group: "monitoring"
+      - org.label-schema.group=monitoring
+      - traefik.docker.network=traefik-proxy
+      - traefik.enable=true
+      - traefik.http.middlewares.prometheus-https-redirect.redirectscheme.scheme=https
+      - traefik.http.routers.prometheus-secure.entrypoints=https
+      - traefik.http.routers.prometheus-secure.rule=Host(`prometheus.thievent.org`)
+      - traefik.http.routers.prometheus-secure.service=prometheus
+      - traefik.http.routers.prometheus-secure.tls=true
+      - traefik.http.routers.prometheus-secure.tls.certresolver=http
+      - traefik.http.routers.prometheus.entrypoints=http
+      - traefik.http.routers.prometheus.middlewares=prometheus-https-redirect
+      - traefik.http.routers.prometheus.rule=Host(`prometheus.thievent.org`)
+      - traefik.http.routers.prometheus.service=prometheus
+      - traefik.http.routers.prometheus.tls.certresolver=leresolver
+      - traefik.http.services.prometheus.loadbalancer.server.port=9090
 
   alertmanager:
-    image: prom/alertmanager:v0.21.0
+    image: prom/alertmanager:latest
     container_name: alertmanager
     volumes:
       - ./alertmanager:/etc/alertmanager
@@ -45,10 +59,24 @@ services:
     networks:
       - monitor-net
     labels:
-      org.label-schema.group: "monitoring"
+      - org.label-schema.group=monitoring
+      - traefik.docker.network=traefik-proxy
+      - traefik.enable=true
+      - traefik.http.middlewares.am-https-redirect.redirectscheme.scheme=https
+      - traefik.http.routers.am-secure.entrypoints=https
+      - traefik.http.routers.am-secure.rule=Host(`am.thievent.org`)
+      - traefik.http.routers.am-secure.service=am
+      - traefik.http.routers.am-secure.tls=true
+      - traefik.http.routers.am-secure.tls.certresolver=http
+      - traefik.http.routers.am.entrypoints=http
+      - traefik.http.routers.am.middlewares=am-https-redirect
+      - traefik.http.routers.am.rule=Host(`am.thievent.org`)
+      - traefik.http.routers.am.service=am
+      - traefik.http.routers.am.tls.certresolver=leresolver
+      - traefik.http.services.am.loadbalancer.server.port=9093
 
   nodeexporter:
-    image: prom/node-exporter:v1.0.1
+    image: prom/node-exporter:latest
     container_name: nodeexporter
     volumes:
       - /proc:/host/proc:ro
@@ -65,10 +93,24 @@ services:
     networks:
       - monitor-net
     labels:
-      org.label-schema.group: "monitoring"
+      - org.label-schema.group=monitoring
+      - traefik.docker.network=traefik-proxy
+      - traefik.enable=true
+      - traefik.http.middlewares.nodeex-https-redirect.redirectscheme.scheme=https
+      - traefik.http.routers.nodeex-secure.entrypoints=https
+      - traefik.http.routers.nodeex-secure.rule=Host(`nodeex.thievent.org`)
+      - traefik.http.routers.nodeex-secure.service=nodeex
+      - traefik.http.routers.nodeex-secure.tls=true
+      - traefik.http.routers.nodeex-secure.tls.certresolver=http
+      - traefik.http.routers.nodeex.entrypoints=http
+      - traefik.http.routers.nodeex.middlewares=nodeex-https-redirect
+      - traefik.http.routers.nodeex.rule=Host(`nodeex.thievent.org`)
+      - traefik.http.routers.nodeex.service=nodeex
+      - traefik.http.routers.nodeex.tls.certresolver=leresolver
+      - traefik.http.services.nodeex.loadbalancer.server.port=9100
 
   cadvisor:
-    image: gcr.io/cadvisor/cadvisor:v0.38.6
+    image: gcr.io/cadvisor/cadvisor:latest
     container_name: cadvisor
     volumes:
       - /:/rootfs:ro
@@ -82,10 +124,24 @@ services:
     networks:
       - monitor-net
     labels:
-      org.label-schema.group: "monitoring"
+      - org.label-schema.group=monitoring
+      - traefik.docker.network=traefik-proxy
+      - traefik.enable=true
+      - traefik.http.middlewares.cadvisor-https-redirect.redirectscheme.scheme=https
+      - traefik.http.routers.cadvisor-secure.entrypoints=https
+      - traefik.http.routers.cadvisor-secure.rule=Host(`cadvisor.thievent.org`)
+      - traefik.http.routers.cadvisor-secure.service=cadvisor
+      - traefik.http.routers.cadvisor-secure.tls=true
+      - traefik.http.routers.cadvisor-secure.tls.certresolver=http
+      - traefik.http.routers.cadvisor.entrypoints=http
+      - traefik.http.routers.cadvisor.middlewares=cadvisor-https-redirect
+      - traefik.http.routers.cadvisor.rule=Host(`cadvisor.thievent.org`)
+      - traefik.http.routers.cadvisor.service=cadvisor
+      - traefik.http.routers.cadvisor.tls.certresolver=leresolver
+      - traefik.http.services.cadvisor.loadbalancer.server.port=8080
 
   grafana:
-    image: grafana/grafana:7.3.6
+    image: grafana/grafana:latest
     container_name: grafana
     volumes:
       - grafana_data:/var/lib/grafana
@@ -100,10 +156,24 @@ services:
     networks:
       - monitor-net
     labels:
-      org.label-schema.group: "monitoring"
+      - org.label-schema.group=monitoring
+      - traefik.docker.network=traefik-proxy
+      - traefik.enable=true
+      - traefik.http.middlewares.grafana-https-redirect.redirectscheme.scheme=https
+      - traefik.http.routers.grafana-secure.entrypoints=https
+      - traefik.http.routers.grafana-secure.rule=Host(`grafana.thievent.org`)
+      - traefik.http.routers.grafana-secure.service=grafana
+      - traefik.http.routers.grafana-secure.tls=true
+      - traefik.http.routers.grafana-secure.tls.certresolver=http
+      - traefik.http.routers.grafana.entrypoints=http
+      - traefik.http.routers.grafana.middlewares=grafana-https-redirect
+      - traefik.http.routers.grafana.rule=Host(`grafana.thievent.org`)
+      - traefik.http.routers.grafana.service=grafana
+      - traefik.http.routers.grafana.tls.certresolver=leresolver
+      - traefik.http.services.grafana.loadbalancer.server.port=3000
 
   pushgateway:
-    image: prom/pushgateway:v1.3.1
+    image: prom/pushgateway:latest
     container_name: pushgateway
     restart: unless-stopped
     expose:
@@ -111,23 +181,18 @@ services:
     networks:
       - monitor-net
     labels:
-      org.label-schema.group: "monitoring"
-
-  caddy:
-    image: stefanprodan/caddy
-    container_name: caddy
-    ports:
-      - "3000:3000"
-      - "9090:9090"
-      - "9093:9093"
-      - "9091:9091"
-    volumes:
-      - ./caddy:/etc/caddy
-    environment:
-      - ADMIN_USER=${ADMIN_USER:-admin}
-      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
-    restart: unless-stopped
-    networks:
-      - monitor-net
-    labels:
-      org.label-schema.group: "monitoring"
+      - org.label-schema.group=monitoring
+      - traefik.docker.network=traefik-proxy
+      - traefik.enable=true
+      - traefik.http.middlewares.pgw-https-redirect.redirectscheme.scheme=https
+      - traefik.http.routers.pgw-secure.entrypoints=https
+      - traefik.http.routers.pgw-secure.rule=Host(`pgw.thievent.org`)
+      - traefik.http.routers.pgw-secure.service=pgw
+      - traefik.http.routers.pgw-secure.tls=true
+      - traefik.http.routers.pgw-secure.tls.certresolver=http
+      - traefik.http.routers.pgw.entrypoints=http
+      - traefik.http.routers.pgw.middlewares=pgw-https-redirect
+      - traefik.http.routers.pgw.rule=Host(`pgw.thievent.org`)
+      - traefik.http.routers.pgw.service=pgw
+      - traefik.http.routers.pgw.tls.certresolver=leresolver
+      - traefik.http.services.pgw.loadbalancer.server.port=9091
