@@ -41,8 +41,6 @@ services:
       - traefik.http.routers.prometheus.entrypoints=http
       - traefik.http.routers.prometheus.middlewares=prometheus-https-redirect
       - traefik.http.routers.prometheus.rule=Host(`prometheus.thievent.org`)
-      - traefik.http.routers.prometheus.service=prometheus
-      - traefik.http.routers.prometheus.tls.certresolver=leresolver
       - traefik.http.services.prometheus.loadbalancer.server.port=9090
 
   alertmanager:
@@ -71,8 +69,6 @@ services:
       - traefik.http.routers.am.entrypoints=http
       - traefik.http.routers.am.middlewares=am-https-redirect
       - traefik.http.routers.am.rule=Host(`am.thievent.org`)
-      - traefik.http.routers.am.service=am
-      - traefik.http.routers.am.tls.certresolver=leresolver
       - traefik.http.services.am.loadbalancer.server.port=9093
 
   nodeexporter:
@@ -105,8 +101,6 @@ services:
       - traefik.http.routers.nodeex.entrypoints=http
       - traefik.http.routers.nodeex.middlewares=nodeex-https-redirect
       - traefik.http.routers.nodeex.rule=Host(`nodeex.thievent.org`)
-      - traefik.http.routers.nodeex.service=nodeex
-      - traefik.http.routers.nodeex.tls.certresolver=leresolver
       - traefik.http.services.nodeex.loadbalancer.server.port=9100
 
   cadvisor:
@@ -136,8 +130,6 @@ services:
       - traefik.http.routers.cadvisor.entrypoints=http
       - traefik.http.routers.cadvisor.middlewares=cadvisor-https-redirect
       - traefik.http.routers.cadvisor.rule=Host(`cadvisor.thievent.org`)
-      - traefik.http.routers.cadvisor.service=cadvisor
-      - traefik.http.routers.cadvisor.tls.certresolver=leresolver
       - traefik.http.services.cadvisor.loadbalancer.server.port=8080
 
   grafana:
@@ -168,8 +160,6 @@ services:
       - traefik.http.routers.grafana.entrypoints=http
       - traefik.http.routers.grafana.middlewares=grafana-https-redirect
       - traefik.http.routers.grafana.rule=Host(`grafana.thievent.org`)
-      - traefik.http.routers.grafana.service=grafana
-      - traefik.http.routers.grafana.tls.certresolver=leresolver
       - traefik.http.services.grafana.loadbalancer.server.port=3000
 
   pushgateway:
@@ -193,6 +183,4 @@ services:
       - traefik.http.routers.pgw.entrypoints=http
       - traefik.http.routers.pgw.middlewares=pgw-https-redirect
       - traefik.http.routers.pgw.rule=Host(`pgw.thievent.org`)
-      - traefik.http.routers.pgw.service=pgw
-      - traefik.http.routers.pgw.tls.certresolver=leresolver
       - traefik.http.services.pgw.loadbalancer.server.port=9091
